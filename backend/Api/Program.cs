@@ -10,6 +10,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddAutoMapper(cfg => cfg.AddMaps(AppDomain.CurrentDomain.GetAssemblies()));
+
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 
 builder.Services.AddScoped<IBudgetRepo, BudgetRepo>();
@@ -17,7 +19,6 @@ builder.Services.AddScoped<IBudgetRepo, BudgetRepo>();
 builder.Services.AddScoped<ICategoryRepo, CategoryRepo>();  
 
 builder.Services.AddScoped<ITransactionRepo, TransactionRepo>();
-
 
 builder.Services.AddControllers();
 

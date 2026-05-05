@@ -1,18 +1,22 @@
 using Api.Models;
 using Api.Services;
+using Api.Dtos.Transactions;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
 namespace Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class TransactionsController(ITransactionRepo repo) : ControllerBase
+    public class TransactionsController(ITransactionRepo repo, IMapper mapper) : ControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetTransactions()
         {
             var transactions = await repo.GetAllAsync();
-            return Ok(transactions);
+            var transactionsRead = mapper.Map<IEnumerable<TransactionReadDto>>(transactions);
+
+            return Ok(transactionsRead);
         }
 
         [HttpGet("{id}", Name = "GetTransactionById")]
@@ -24,27 +28,34 @@ namespace Api.Controllers
                 return NotFound();
             } else
             {
-                return Ok(transaction);
+                var transactionRead = mapper.Map<TransactionReadDto>(transaction);
+
+                return Ok(transactionRead);
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTransaction([FromBody] Transaction transaction)
+        public async Task<IActionResult> CreateTransaction([FromBody] TransactionCreateDto transactionCreate)
         {
+            var transaction = mapper.Map<Transaction>(transactionCreate);
             await repo.CreateAsync(transaction);
-            return CreatedAtAction(nameof(GetTransactions), new { id = transaction }, transaction);
+            var transactionRead = mapper.Map<TransactionReadDto>(transaction);
+
+            return CreatedAtAction(nameof(GetTransactions), new { id = transaction }, transactionRead);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTransaction(Guid id, [FromBody] Transaction transaction)
+        public async Task<IActionResult> UpdateTransaction(Guid id, [FromBody] TransactionUpdateDto transactionUpdate)
         {
-            var existingTransaction = await repo.GetByIdAsync(id);
-            if (existingTransaction == null)
+            var transaction = await repo.GetByIdAsync(id);
+            if (transaction == null)
             {
                 return NotFound();
             } else
             {
+                mapper.Map(transactionUpdate, transaction);
                 await repo.UpdateAsync(transaction);
+
                 return NoContent();
             }
         }
@@ -52,8 +63,8 @@ namespace Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTransaction(Guid id)
         {
-            var existingTransaction = await repo.GetByIdAsync(id);
-            if (existingTransaction == null)
+            var transaction = await repo.GetByIdAsync(id);
+            if (transaction == null)
             {
                 return NotFound();
             } else
