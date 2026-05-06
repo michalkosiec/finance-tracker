@@ -5,9 +5,6 @@ namespace Api.Dtos.Budgets
     public class BudgetUpdateDto
     {
         [Required]
-        public Guid UserId { get; set; }
-
-        [Required]
         public Guid CategoryId { get; set; }
 
         [Required]

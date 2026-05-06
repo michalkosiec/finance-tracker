@@ -8,7 +8,7 @@ namespace Api.Models
         Expense
     }
 
-    public class Transaction
+    public class Transaction : IUserOwned
     {
         [Key]
         [Required]

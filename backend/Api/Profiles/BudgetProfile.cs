@@ -14,12 +14,12 @@ namespace Api.Profiles
             CreateMap<BudgetCreateDto, Budget>().ForMember(dest => dest.Month, opt => opt.MapFrom(src => DateTime.SpecifyKind(
             DateTime.ParseExact(src.Month, "yyyy-MM", CultureInfo.InvariantCulture), 
             DateTimeKind.Utc
-        )));
+        ))).ForMember(dest => dest.UserId, opt => opt.Ignore());;
         
             CreateMap<BudgetUpdateDto, Budget>().ForMember(dest => dest.Month, opt => opt.MapFrom(src => DateTime.SpecifyKind(
             DateTime.ParseExact(src.Month, "yyyy-MM", CultureInfo.InvariantCulture), 
             DateTimeKind.Utc
-        )));
+        ))).ForMember(dest => dest.UserId, opt => opt.Ignore());;
         }
     }
 }

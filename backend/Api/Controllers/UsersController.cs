@@ -1,15 +1,17 @@
 using Api.Models;
-using Api.Services;
+using Api.Repositories;
 using Api.Dtos.Users;
 using Microsoft.AspNetCore.Mvc;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("[controller]")]
-    public class UsersController(IUserRepo repo, IMapper mapper) : ControllerBase
+    public class UsersController(IUserRepo repo, IMapper mapper) : AppControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetUsers()

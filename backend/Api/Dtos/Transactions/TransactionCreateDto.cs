@@ -6,9 +6,6 @@ namespace Api.Dtos.Transactions
     public class TransactionCreateDto
     {
         [Required]
-        public Guid UserId {get; set;}
-
-        [Required]
         public string Name {get; set;}
 
         [Required]

@@ -2,11 +2,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Api.Models
 {
-    public class Category
+    public class Category : IUserOwned
     {
         [Key]
         [Required]
         public Guid Id {get; set;}
+
+        [Required]
+        public Guid UserId { get; set; }
+        public User? User { get; set; }
 
         [Required]
         public string Name {get; set;}

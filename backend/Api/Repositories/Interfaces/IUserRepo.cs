@@ -1,6 +1,7 @@
 using Api.Models;
+using Api.Repositories.Interfaces;
 
-namespace Api.Services
+namespace Api.Repositories
 {
     public interface IUserRepo : IGenericRepo<User>
     {

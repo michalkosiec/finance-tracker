@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Api.Models
 {
-    public class Budget
+    public class Budget : IUserOwned
     {
         [Key]
         [Required]

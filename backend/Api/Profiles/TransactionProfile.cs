@@ -13,12 +13,12 @@ namespace Api.Profiles
             CreateMap<TransactionCreateDto, Transaction>().ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.SpecifyKind(
             DateTime.ParseExact(src.Date, "yyyy-MM", CultureInfo.InvariantCulture), 
             DateTimeKind.Utc
-        )));
+        ))).ForMember(dest => dest.UserId, opt => opt.Ignore());;
 
             CreateMap<TransactionUpdateDto, Transaction>().ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.SpecifyKind(
             DateTime.ParseExact(src.Date, "yyyy-MM", CultureInfo.InvariantCulture), 
             DateTimeKind.Utc
-        )));
+        ))).ForMember(dest => dest.UserId, opt => opt.Ignore());;
 
             CreateMap<TransactionQueryDto, TransactionParameters>();
         }

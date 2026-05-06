@@ -19,6 +19,9 @@ namespace Api.Models
         public string PasswordHash { get; set; }
 
         [Required]
+        public string Role { get; set; } = "User";
+
+        [Required]
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
         [Required]

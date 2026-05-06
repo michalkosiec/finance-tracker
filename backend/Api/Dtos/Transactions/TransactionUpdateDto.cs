@@ -6,9 +6,6 @@ namespace Api.Dtos.Transactions
     public class TransactionUpdateDto
     {
         [Required]
-        public Guid UserId {get; set;}
-
-        [Required]
         public string Name {get; set;}
 
         [Required]

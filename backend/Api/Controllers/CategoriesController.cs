@@ -1,19 +1,21 @@
 using Api.Models;
-using Api.Services;
 using Api.Dtos.Categories;
 using Microsoft.AspNetCore.Mvc;
+using Api.Repositories.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class CategoriesController(ICategoryRepo repo, IMapper mapper) : ControllerBase
+    public class CategoriesController(ICategoryRepo repo, IMapper mapper) : AppControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetCategories()
         {
-            var categories = await repo.GetAllAsync();
+            var categories = await repo.GetAllAsync(UserId!.Value);
             var categoriesRead = mapper.Map<IEnumerable<CategoryReadDto>>(categories);
             return Ok(categoriesRead);
         }
@@ -21,7 +23,7 @@ namespace Api.Controllers
         [HttpGet("{id}", Name = "GetCategoryById")]
         public async Task<IActionResult> GetCategoryById(Guid id)
         {
-            var category = await repo.GetByIdAsync(id);
+            var category = await repo.GetByIdAsync(id, UserId!.Value);
             if (category == null)
             {
                 return NotFound();
@@ -37,6 +39,8 @@ namespace Api.Controllers
         public async Task<IActionResult> CreateCategory([FromBody] CategoryCreateDto categoryCreate)
         {
             var category = mapper.Map<Category>(categoryCreate);
+            category.UserId = UserId!.Value;
+
             await repo.CreateAsync(category);
             var categoryRead = mapper.Map<CategoryReadDto>(category);
 
@@ -46,7 +50,7 @@ namespace Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] CategoryUpdateDto categoryUpdate)
         {
-            var category = await repo.GetByIdAsync(id);
+            var category = await repo.GetByIdAsync(id, UserId!.Value);
             if (category == null)
             {
                 return NotFound();
@@ -56,7 +60,7 @@ namespace Api.Controllers
                 mapper.Map(categoryUpdate, category);
                 category.UpdatedAt = DateTimeOffset.UtcNow;
                 
-                await repo.UpdateAsync(category);
+                await repo.UpdateAsync(category, UserId!.Value);
 
                 return NoContent();
             }
@@ -65,13 +69,13 @@ namespace Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(Guid id)
         {
-            var category = await repo.GetByIdAsync(id);
+            var category = await repo.GetByIdAsync(id, UserId!.Value);
             if (category == null)
             {
                 return NotFound();
             } else
             {
-                await repo.DeleteAsync(id);
+                await repo.DeleteAsync(id, UserId!.Value);
 
                 return NoContent();
             }

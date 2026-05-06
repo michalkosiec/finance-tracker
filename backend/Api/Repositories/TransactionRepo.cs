@@ -1,15 +1,16 @@
 using System.Globalization;
 using Api.Data;
 using Api.Models;
+using Api.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Api.Services
+namespace Api.Repositories
 {
-    public class TransactionRepo(AppDbContext context) : GenericRepo<Transaction>(context), ITransactionRepo
+    public class TransactionRepo(AppDbContext context) : UserOwnedRepo<Transaction>(context), ITransactionRepo
     {
-        public async Task<IEnumerable<Transaction>> GetAllAsync(TransactionParameters parameters)
+        public async Task<IEnumerable<Transaction>> GetAllAsyncByUserId(TransactionParameters parameters, Guid userId)
         {
-            var query = context.Transactions.Include(t => t.Category).AsNoTracking();
+            var query = context.Transactions.Include(t => t.Category).AsNoTracking().Where(c => c.UserId == userId);
 
             if (parameters.Month is not null)
             {

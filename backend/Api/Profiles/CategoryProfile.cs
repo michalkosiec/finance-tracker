@@ -9,8 +9,8 @@ namespace Api.Profiles
         public CategoryProfile()
         {
             CreateMap<Category, CategoryReadDto>();
-            CreateMap<CategoryCreateDto, Category>();
-            CreateMap<CategoryUpdateDto, Category>();
+            CreateMap<CategoryCreateDto, Category>().ForMember(dest => dest.UserId, opt => opt.Ignore());
+            CreateMap<CategoryUpdateDto, Category>().ForMember(dest => dest.UserId, opt => opt.Ignore());
         }
     }
 }

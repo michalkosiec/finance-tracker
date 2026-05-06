@@ -1,20 +1,22 @@
 using Api.Models;
-using Api.Services;
 using Api.Dtos.Transactions;
 using Microsoft.AspNetCore.Mvc;
+using Api.Repositories.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class TransactionsController(ITransactionRepo repo, IMapper mapper) : ControllerBase
+    public class TransactionsController(ITransactionRepo repo, IMapper mapper) : AppControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetTransactions([FromQuery] TransactionQueryDto query)
         {
             var parameters = mapper.Map<TransactionParameters>(query);
-            var transactions = await repo.GetAllAsync(parameters);
+            var transactions = await repo.GetAllAsyncByUserId(parameters, UserId!.Value);
             var transactionsRead = mapper.Map<IEnumerable<TransactionReadDto>>(transactions);
 
             return Ok(transactionsRead);
@@ -23,7 +25,7 @@ namespace Api.Controllers
         [HttpGet("{id}", Name = "GetTransactionById")]
         public async Task<IActionResult> GetTransactionById(Guid id)
         {
-            var transaction = await repo.GetByIdAsync(id);
+            var transaction = await repo.GetByIdAsync(id, UserId!.Value);
             if (transaction == null)
             {
                 return NotFound();
@@ -48,14 +50,14 @@ namespace Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTransaction(Guid id, [FromBody] TransactionUpdateDto transactionUpdate)
         {
-            var transaction = await repo.GetByIdAsync(id);
+            var transaction = await repo.GetByIdAsync(id, UserId!.Value);
             if (transaction == null)
             {
                 return NotFound();
             } else
             {
                 mapper.Map(transactionUpdate, transaction);
-                await repo.UpdateAsync(transaction);
+                await repo.UpdateAsync(transaction, UserId!.Value);
 
                 return NoContent();
             }
@@ -70,7 +72,7 @@ namespace Api.Controllers
                 return NotFound();
             } else
             {
-                await repo.DeleteAsync(id);
+                await repo.DeleteAsync(id, UserId!.Value);
                 
                 return NoContent();
             }

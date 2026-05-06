@@ -4,8 +4,11 @@ namespace Api.Dtos.Categories
 {
     public class CategoryReadDto
     {
-       [Required]
+        [Required]
         public Guid Id {get; set;}
+
+        [Required]
+        public Guid UserId { get; set; }
 
         [Required]
         public string Name {get; set;}

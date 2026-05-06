@@ -9,7 +9,7 @@ namespace Api.Profiles
         public UserProfile()
         {
             CreateMap<User, UserReadDto>();
-            CreateMap<UserCreateDto, User>().ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.Password));
+            CreateMap<UserCreateDto, User>().ForMember(dest => dest.PasswordHash, opt => opt.Ignore());
             CreateMap<UserUpdateDto, User>();
         }
     }
