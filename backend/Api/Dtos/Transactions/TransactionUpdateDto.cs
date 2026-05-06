@@ -22,12 +22,9 @@ namespace Api.Dtos.Transactions
         public Guid CategoryId {get; set;}
 
         [Required]
-        public DateTime Date {get; set;}
+        public string Date {get; set;}
 
         [Required]
         public TransactionType Type {get; set;}
-
-        [Required]
-        public string Title {get; set;}
     }
 }

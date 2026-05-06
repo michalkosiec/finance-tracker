@@ -39,9 +39,6 @@ namespace Api.Models
         public TransactionType Type {get; set;}
 
         [Required]
-        public string Title {get; set;}
-
-        [Required]
         public DateTimeOffset CreatedAt {get; set;}
 
         [Required]

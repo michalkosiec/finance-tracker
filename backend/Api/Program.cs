@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Api.Data;
 using Api.Services;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,10 @@ builder.Services.AddScoped<ICategoryRepo, CategoryRepo>();
 
 builder.Services.AddScoped<ITransactionRepo, TransactionRepo>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 var app = builder.Build();
 

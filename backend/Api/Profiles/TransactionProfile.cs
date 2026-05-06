@@ -1,5 +1,6 @@
 using Api.Models;
 using Api.Dtos.Transactions;
+using System.Globalization;
 
 namespace Api.Profiles
 {
@@ -8,8 +9,18 @@ namespace Api.Profiles
         public TransactionProfile()
         {
             CreateMap<Transaction, TransactionReadDto>();
-            CreateMap<TransactionCreateDto, Transaction>();
-            CreateMap<TransactionUpdateDto, Transaction>();
+
+            CreateMap<TransactionCreateDto, Transaction>().ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.SpecifyKind(
+            DateTime.ParseExact(src.Date, "yyyy-MM", CultureInfo.InvariantCulture), 
+            DateTimeKind.Utc
+        )));
+
+            CreateMap<TransactionUpdateDto, Transaction>().ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.SpecifyKind(
+            DateTime.ParseExact(src.Date, "yyyy-MM", CultureInfo.InvariantCulture), 
+            DateTimeKind.Utc
+        )));
+
+            CreateMap<TransactionQueryDto, TransactionParameters>();
         }
     }
 }

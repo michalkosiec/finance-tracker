@@ -11,9 +11,10 @@ namespace Api.Controllers
     public class TransactionsController(ITransactionRepo repo, IMapper mapper) : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> GetTransactions()
+        public async Task<IActionResult> GetTransactions([FromQuery] TransactionQueryDto query)
         {
-            var transactions = await repo.GetAllAsync();
+            var parameters = mapper.Map<TransactionParameters>(query);
+            var transactions = await repo.GetAllAsync(parameters);
             var transactionsRead = mapper.Map<IEnumerable<TransactionReadDto>>(transactions);
 
             return Ok(transactionsRead);
@@ -70,6 +71,7 @@ namespace Api.Controllers
             } else
             {
                 await repo.DeleteAsync(id);
+                
                 return NoContent();
             }
         }

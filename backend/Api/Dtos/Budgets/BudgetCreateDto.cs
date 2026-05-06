@@ -16,9 +16,6 @@ namespace Api.Dtos.Budgets
         public decimal LimitAmount { get; set; }
 
         [Required]
-        public int Year { get; set; }
-
-        [Required]
-        public int Month { get; set; }
+        public string Month { get; set; }
     }
 }
