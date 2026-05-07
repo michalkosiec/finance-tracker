@@ -20,6 +20,8 @@ builder.Services.AddAutoMapper(cfg => cfg.AddMaps(AppDomain.CurrentDomain.GetAss
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+builder.Services.AddScoped<IStatsService, StatsService>();
+
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 
 builder.Services.AddScoped<IBudgetRepo, BudgetRepo>();

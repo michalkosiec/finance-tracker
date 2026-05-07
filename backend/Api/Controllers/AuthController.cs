@@ -2,9 +2,6 @@ using Api.Dtos.Users;
 using Api.Services;
 using Api.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using System.Security.Claims;
-using Api.Repositories.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 
