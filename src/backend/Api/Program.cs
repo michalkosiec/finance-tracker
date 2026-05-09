@@ -81,8 +81,6 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-app.UseHttpsRedirection();
-
 app.UseRouting();
 
 app.UseCors(MyAllowSpecificOrigins);
