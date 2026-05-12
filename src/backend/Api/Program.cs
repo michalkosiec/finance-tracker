@@ -45,6 +45,8 @@ builder.Services.AddScoped<ICategoryRepo, CategoryRepo>();
 
 builder.Services.AddScoped<ITransactionRepo, TransactionRepo>();
 
+builder.Services.AddScoped<IBudgetValidationService, BudgetValidationService>();
+
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {

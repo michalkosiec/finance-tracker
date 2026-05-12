@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Api.Validations;
 
 namespace Api.Dtos.Budgets
 {
@@ -12,6 +13,7 @@ namespace Api.Dtos.Budgets
         public decimal LimitAmount { get; set; }
 
         [Required]
+        [YearMonth]
         public string Month { get; set; }
     }
 }

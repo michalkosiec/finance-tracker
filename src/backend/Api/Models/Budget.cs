@@ -22,7 +22,7 @@ namespace Api.Models
         public decimal LimitAmount { get; set; }
 
         [Required]
-        public int Month { get; set; }
+        public DateTime Month { get; set; }
 
         [Required]
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;

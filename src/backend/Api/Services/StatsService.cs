@@ -38,7 +38,7 @@ namespace Api.Services
             return categoryStats;
         }
 
-        public async Task<IEnumerable<MonthlyStatReadDto>> GetMonthlyStatsAsync(DateTime date, Guid userId)
+        public async Task<MonthlyStatsReadDto> GetMonthlyStatsAsync(DateTime date, Guid userId)
         {
             var dbStats = await context.Transactions.AsNoTracking().Where(t => t.UserId == userId && t.Date.Year == date.Year)
                 .GroupBy(t => t.Date.Month)
@@ -48,20 +48,20 @@ namespace Api.Services
                     TotalExpense = g.Where(t => t.Type == TransactionType.Expense).Sum(t => t.Amount),})
                 .ToListAsync();
 
-            var fullYearStats = new List<MonthlyStatReadDto>();
+            MonthlyStatsReadDto monthlyStatsRead = new MonthlyStatsReadDto();
 
             for (int i = 1; i <= 12; i++)
             {
                 var monthData = dbStats.FirstOrDefault(m => m.Month == i);
 
-                fullYearStats.Add(new MonthlyStatReadDto {
+                monthlyStatsRead.Months.Add(new MonthlyStatReadDto {
                     Month = $"{date.Year}-{i:D2}",
                     TotalIncome = monthData?.TotalIncome ?? 0m,
                     TotalExpense = monthData?.TotalExpense ?? 0m,
                 });
             }
 
-            return fullYearStats;
+            return monthlyStatsRead;
         }
     }
 }

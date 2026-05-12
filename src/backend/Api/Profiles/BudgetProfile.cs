@@ -9,7 +9,8 @@ namespace Api.Profiles
     {
         public BudgetProfile()
         {
-            CreateMap<Budget, BudgetReadDto>();
+            CreateMap<Budget, BudgetReadDto>()
+                .ForMember(dest => dest.Month, opt => opt.MapFrom(src => src.Month.ToString("yyyy-MM")));
 
             CreateMap<BudgetCreateDto, Budget>().ForMember(dest => dest.Month, opt => opt.MapFrom(src => DateTime.SpecifyKind(
             DateTime.ParseExact(src.Month, "yyyy-MM", CultureInfo.InvariantCulture), 

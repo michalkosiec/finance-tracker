@@ -44,9 +44,9 @@ namespace Api.Controllers
             if (!DateTime.TryParseExact(year, "yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
                 return BadRequest("Invalid format. Please use yyyy-MM.");
 
-            var monthlyStatReadDtoList = await statsService.GetMonthlyStatsAsync(date, UserId!.Value);
+            var monthlyStatsRead = await statsService.GetMonthlyStatsAsync(date, UserId!.Value);
 
-            return Ok(monthlyStatReadDtoList);
+            return Ok(monthlyStatsRead);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Api.Models;
+using Api.Validations;
 
 namespace Api.Dtos.Transactions
 {
@@ -19,6 +20,7 @@ namespace Api.Dtos.Transactions
         public Guid CategoryId {get; set;}
 
         [Required]
+        [YearMonthDay]
         public string Date {get; set;}
 
         [Required]

@@ -6,6 +6,6 @@ namespace Api.Services
     {
         Task<StatsSummaryReadDto> GetSummaryAsync(DateTime date, Guid userId);
         Task<IEnumerable<CategoryStatReadDto>> GetExpensesByCategoryAsync(DateTime date, Guid userId);
-        Task<IEnumerable<MonthlyStatReadDto>> GetMonthlyStatsAsync(DateTime date, Guid userId);
+        Task<MonthlyStatsReadDto> GetMonthlyStatsAsync(DateTime date, Guid userId);
     }
 }

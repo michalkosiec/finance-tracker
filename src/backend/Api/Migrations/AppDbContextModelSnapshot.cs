@@ -37,8 +37,8 @@ namespace Api.Migrations
                     b.Property<decimal>("LimitAmount")
                         .HasColumnType("decimal(12,2)");
 
-                    b.Property<int>("Month")
-                        .HasColumnType("integer");
+                    b.Property<DateTime>("Month")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");

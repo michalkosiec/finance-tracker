@@ -4,13 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 using Api.Repositories.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Api.Services;
 
 namespace Api.Controllers
 {
     [Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class TransactionsController(ITransactionRepo repo, IMapper mapper) : AppControllerBase
+    public class TransactionsController(ITransactionRepo repo, IMapper mapper, IBudgetValidationService budgetValidationService) : AppControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetTransactions([FromQuery] TransactionQueryDto query)
@@ -41,10 +42,18 @@ namespace Api.Controllers
         public async Task<IActionResult> CreateTransaction([FromBody] TransactionCreateDto transactionCreate)
         {
             var transaction = mapper.Map<Transaction>(transactionCreate);
+
+            transaction.UserId = UserId!.Value;
+
+            if (!await budgetValidationService.AllowTransaction(transaction, UserId!.Value))
+            {
+                return BadRequest("Budget limit amount exceeded.");
+            }
+            
             await repo.CreateAsync(transaction);
             var transactionRead = mapper.Map<TransactionReadDto>(transaction);
 
-            return CreatedAtAction(nameof(GetTransactions), new { id = transaction }, transactionRead);
+            return CreatedAtAction(nameof(GetTransactions), new { id = transaction.Id }, transactionRead);
         }
 
         [HttpPut("{id}")]

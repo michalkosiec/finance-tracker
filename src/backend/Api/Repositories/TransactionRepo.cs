@@ -30,6 +30,14 @@ namespace Api.Repositories
 
             return await query.ToListAsync();
         }
+
+        public async Task<decimal> GetTotalSpendingAsync(Guid userId, Guid categoryId, DateTime month)
+        {
+           var totalExpense = await context.Transactions.Where(t => t.UserId == userId && t.Type == TransactionType.Expense && t.CategoryId == categoryId && t.Date.Year == month.Year && t.Date.Month == month.Month).SumAsync(t => t.Amount);
+           var totalIncome = await context.Transactions.Where(t => t.UserId == userId && t.Type == TransactionType.Income && t.CategoryId == categoryId && t.Date.Year == month.Year && t.Date.Month == month.Month).SumAsync(t => t.Amount);
+           
+           return totalExpense - totalIncome;
+        }
     }
 
 }
