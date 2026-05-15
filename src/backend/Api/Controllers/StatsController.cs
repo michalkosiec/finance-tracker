@@ -1,5 +1,6 @@
 using System.Globalization;
 using Api.Services;
+using Api.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,9 +32,9 @@ namespace Api.Controllers
             if (!DateTime.TryParseExact(month, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
                 return BadRequest("Invalid format. Please use yyyy-MM.");
 
-            var categoryStatReadDtoList = await statsService.GetExpensesByCategoryAsync(date, UserId!.Value);
+            var categoryStatsRead = await statsService.GetExpensesByCategoryAsync(date, UserId!.Value);
 
-            return Ok(categoryStatReadDtoList);
+            return Ok(categoryStatsRead);
         }
 
         [HttpGet("monthly")]

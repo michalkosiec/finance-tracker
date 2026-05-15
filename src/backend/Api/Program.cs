@@ -8,6 +8,8 @@ using Scalar.AspNetCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Api.Services.Interfaces;
+using Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,18 +36,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddAutoMapper(cfg => cfg.AddMaps(AppDomain.CurrentDomain.GetAssemblies()));
 
 builder.Services.AddScoped<IAuthService, AuthService>();
-
 builder.Services.AddScoped<IStatsService, StatsService>();
-
 builder.Services.AddScoped<IUserRepo, UserRepo>();
-
 builder.Services.AddScoped<IBudgetRepo, BudgetRepo>();
-
 builder.Services.AddScoped<ICategoryRepo, CategoryRepo>();  
-
 builder.Services.AddScoped<ITransactionRepo, TransactionRepo>();
-
-builder.Services.AddScoped<IBudgetValidationService, BudgetValidationService>();
+builder.Services.AddScoped<IValidationService, ValidationService>();
 
 
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -82,6 +78,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseRouting();
 

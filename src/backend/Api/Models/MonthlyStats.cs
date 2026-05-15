@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using Api.Validations;
 
-namespace Api.Dtos.Stats
+namespace Api.Models
 {
-    public class MonthlyStatReadDto
+     public class MonthlyStat
     {
         [Required]
         [YearMonth]
@@ -14,5 +14,10 @@ namespace Api.Dtos.Stats
 
         [Required]
         public decimal TotalExpense { get; set; }
+    }
+    
+    public class MonthlyStats {
+        [Required]
+        public List<MonthlyStat> Months = new List<MonthlyStat>();
     }
 }

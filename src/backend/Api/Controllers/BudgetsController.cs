@@ -4,13 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using Api.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Api.Services.Interfaces;
 
 namespace Api.Controllers
 {
     [Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class BudgetsController(IBudgetRepo repo, IMapper mapper) : AppControllerBase
+    public class BudgetsController(IBudgetRepo repo, IMapper mapper, IValidationService validationService) : AppControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetBudgets()
@@ -42,10 +43,15 @@ namespace Api.Controllers
             var budget = mapper.Map<Budget>(budgetCreate);
             budget.UserId = UserId!.Value;
 
+            if(!await validationService.AllowBudget(budget, UserId!.Value))
+            {
+                return BadRequest("Budget's limit amount has been exceeded.");
+            }
+
             await repo.CreateAsync(budget);
             var budgetRead = mapper.Map<BudgetReadDto>(budget);
 
-            return CreatedAtAction(nameof(GetBudgets), new { id = budget }, budgetRead);
+            return CreatedAtAction(nameof(GetBudgetById), new { id = budget.Id }, budgetRead);
         }
 
         [HttpPut("{id}")]
@@ -61,6 +67,11 @@ namespace Api.Controllers
                 budget.UserId = UserId!.Value;
 
                 budget.UpdatedAt = DateTimeOffset.UtcNow;
+
+                if(!await validationService.AllowBudget(budget, UserId!.Value))
+                {
+                    return BadRequest("Budget's limit amount has been exceeded.");
+                }
                 
                 await repo.UpdateAsync(budget, UserId!.Value);
 
@@ -77,7 +88,7 @@ namespace Api.Controllers
                 return NotFound();
             } else
             {
-                await repo.DeleteAsync(id);
+                await repo.DeleteAsync(id, UserId!.Value);
                 
                 return NoContent();
             }

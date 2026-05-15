@@ -1,6 +1,6 @@
 using Api.Dtos.Users;
 
-namespace Api.Services
+namespace Api.Services.Interfaces
 {
     public interface IAuthService
     {

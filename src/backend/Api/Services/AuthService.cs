@@ -1,13 +1,11 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Api.Data;
 using Api.Dtos.Users;
 using Api.Models;
 using Api.Repositories;
-using Api.Repositories.Interfaces;
+using Api.Services.Interfaces;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Api.Services
@@ -36,8 +34,6 @@ namespace Api.Services
 
             var user = mapper.Map<User>(userCreate);
             user.PasswordHash = passwordHash;
-
-            Console.WriteLine($"Registering user: {user.Email}, PasswordHash: {user.PasswordHash}");
 
             await repo.CreateAsync(user);
 

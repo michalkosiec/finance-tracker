@@ -1,14 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using Api.Validations;
 
-namespace Api.Dtos.Stats
+namespace Api.Models
 {
-    public class CategoryStatReadDto
+    public class CategoryStat
     {
-        [Required]
-        [YearMonth]
-        public string Month { get; set; } = string.Empty;
-        
         [Required]
         public string Category { get; set; } = string.Empty;
 
@@ -17,5 +13,14 @@ namespace Api.Dtos.Stats
 
         [Required]
         public int NumberOfTransactions { get; set; }
+    }
+
+    public class CategoryStats
+    {
+        [Required]
+        [YearMonth]
+        public string Month { get; set; } = string.Empty;
+
+        public IEnumerable<CategoryStat> Categories { get; set; } = new List<CategoryStat>();
     }
 }
