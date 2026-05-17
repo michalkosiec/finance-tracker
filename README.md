@@ -1,6 +1,6 @@
 # Finance Tracker
 
-A modern, containerized personal finance management application. This repository uses a monorepo structure, currently housing the .NET backend and PostgreSQL database, with a Kotlin-based frontend planned for the future. The project features a fully automated Docker setup with "on-the-fly" Entity Framework Core migrations.
+A modern, containerized personal finance management application. This repository uses a monorepo structure, currently housing the .NET backend and PostgreSQL database, with a Swift-based frontend planned for the future. The project features a fully automated Docker setup with "on-the-fly" Entity Framework Core migrations.
 
 ## Tech Stack
 
@@ -10,7 +10,7 @@ A modern, containerized personal finance management application. This repository
 * **ORM:** Entity Framework Core 10
 
 **Frontend (Upcoming)**
-* **Language/Framework:** Kotlin
+* **Language/Framework:** Swift
 
 **Infrastructure & Tools**
 * **Containerization:** Docker & Docker Compose
@@ -75,7 +75,7 @@ By default (based on `.env.example`), the services are exposed as follows:
 ### Monorepo Structure
 The project is organized into separate domains:
 * `/src/backend/Api` - .NET 10.0 REST API
-* `/src/frontend/...` - (Planned) Kotlin frontend
+* `/src/frontend/...` - (Planned) Swift frontend
 
 ### Adding New Backend Migrations
 Since the containerized environment handles applying migrations, you can generate them locally using standard EF Core CLI tools inside the backend directory:
@@ -114,7 +114,7 @@ db_data/
 ---
 
 ## Ready to go?
-To simply run the project on a daily basis (once configured), just run:
+To run the project on a daily basis (once configured), just run:
 
 ```bash
 docker-compose up
