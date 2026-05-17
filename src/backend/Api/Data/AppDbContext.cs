@@ -12,5 +12,18 @@ namespace Api.Data
         public DbSet<Transaction> Transactions { get; set; }
 
         public DbSet<User> Users { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<Budget>()
+                .HasIndex(b => new { b.UserId, b.CategoryId, b.Month })
+                .IsUnique();
+        }
     }
 }

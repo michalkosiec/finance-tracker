@@ -46,10 +46,7 @@ namespace Api.Controllers
 
             transaction.UserId = UserId!.Value;
 
-                if (!await validationService.AllowTransaction(transaction, UserId!.Value))
-                    {
-                        return BadRequest("Budget limit amount exceeded.");
-                    }
+            await validationService.AllowTransaction(transaction, UserId!.Value);
             
             await repo.CreateAsync(transaction);
             var transactionRead = mapper.Map<TransactionReadDto>(transaction);
@@ -68,10 +65,7 @@ namespace Api.Controllers
             {
                 mapper.Map(transactionUpdate, transaction);
 
-                if (!await validationService.AllowTransaction(transaction, UserId!.Value))
-                    {
-                        return BadRequest("Budget limit amount exceeded.");
-                    }
+                await validationService.AllowTransaction(transaction, UserId!.Value);
 
                 await repo.UpdateAsync(transaction, UserId!.Value);
 

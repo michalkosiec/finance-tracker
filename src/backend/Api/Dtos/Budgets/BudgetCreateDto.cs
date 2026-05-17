@@ -5,14 +5,15 @@ namespace Api.Dtos.Budgets
 {
     public class BudgetCreateDto
     {
-        [Required]
+        [Required(ErrorMessage = "CategoryId is required.")]
+        [RegularExpression(@"^({?)[0-9A-Fa-f]{8}-([0-9A-Fa-f]{4}-){3}[0-9A-Fa-f]{12}(}?)$", ErrorMessage = "Invalid Guid format.")]
         public Guid CategoryId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "LimitAmount is required.")]
         [Range(0.01, double.MaxValue, ErrorMessage = "LimitAmount must be greater than 0.")]
         public decimal LimitAmount { get; set; }
 
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Month is required.")]
         [YearMonth]
         public string Month { get; set; }
     }

@@ -4,13 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 using Api.Repositories.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Api.Services.Interfaces;
 
 namespace Api.Controllers
 {
     [Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class CategoriesController(ICategoryRepo repo, IMapper mapper) : AppControllerBase
+    public class CategoriesController(ICategoryRepo repo, IMapper mapper, IValidationService validationService) : AppControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetCategories()
@@ -41,6 +42,8 @@ namespace Api.Controllers
             var category = mapper.Map<Category>(categoryCreate);
             category.UserId = UserId!.Value;
 
+            await validationService.AllowCategory(category, UserId!.Value);
+
             await repo.CreateAsync(category);
             var categoryRead = mapper.Map<CategoryReadDto>(category);
 
@@ -59,6 +62,9 @@ namespace Api.Controllers
             {
                 mapper.Map(categoryUpdate, category);
                 category.UpdatedAt = DateTimeOffset.UtcNow;
+
+                await validationService.AllowCategory(category, UserId!.Value);
+
                 
                 await repo.UpdateAsync(category, UserId!.Value);
 
@@ -75,6 +81,7 @@ namespace Api.Controllers
                 return NotFound();
             } else
             {
+                await validationService.AllowCategoryDelete(category, UserId!.Value);
                 await repo.DeleteAsync(id, UserId!.Value);
 
                 return NoContent();

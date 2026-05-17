@@ -4,10 +4,14 @@ namespace Api.Dtos.Users
 {
     public class UserUpdateDto
     {
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Name is required.")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Name must be between {2} and {1} characters.")]
+        [RegularExpression(@"^[a-zA-Z0-9_ ]+$", ErrorMessage = "Name can only contain letters, numbers, spaces, and underscores.")]
         public string Name { get; set; }
 
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Invalid email address format.")]
+        [StringLength(100, ErrorMessage = "Email cannot exceed {1} characters.")]
         public string Email { get; set; }
     }
 }

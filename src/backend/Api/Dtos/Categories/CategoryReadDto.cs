@@ -19,8 +19,6 @@ namespace Api.Dtos.Categories
         [Required]
         public string Color {get; set;}
 
-        public bool IsActive {get; set;}
-
         [Required]
         public DateTimeOffset CreatedAt {get; set;}
 

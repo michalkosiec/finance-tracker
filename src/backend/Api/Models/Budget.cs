@@ -19,6 +19,7 @@ namespace Api.Models
 
         [Required]
         [Column(TypeName = "decimal(12,2)")]
+        [Range(0.01, (double)decimal.MaxValue, ErrorMessage = "Limit amount must be greater than 0.")]
         public decimal LimitAmount { get; set; }
 
         [Required]

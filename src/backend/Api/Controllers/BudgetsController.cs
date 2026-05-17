@@ -43,10 +43,7 @@ namespace Api.Controllers
             var budget = mapper.Map<Budget>(budgetCreate);
             budget.UserId = UserId!.Value;
 
-            if(!await validationService.AllowBudget(budget, UserId!.Value))
-            {
-                return BadRequest("Budget's limit amount has been exceeded.");
-            }
+            await validationService.AllowBudget(budget, UserId!.Value);
 
             await repo.CreateAsync(budget);
             var budgetRead = mapper.Map<BudgetReadDto>(budget);
@@ -68,10 +65,7 @@ namespace Api.Controllers
 
                 budget.UpdatedAt = DateTimeOffset.UtcNow;
 
-                if(!await validationService.AllowBudget(budget, UserId!.Value))
-                {
-                    return BadRequest("Budget's limit amount has been exceeded.");
-                }
+                await validationService.AllowBudget(budget, UserId!.Value);
                 
                 await repo.UpdateAsync(budget, UserId!.Value);
 

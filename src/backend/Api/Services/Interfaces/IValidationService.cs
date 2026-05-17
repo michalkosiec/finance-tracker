@@ -4,7 +4,9 @@ namespace Api.Services.Interfaces
 {
     public interface IValidationService
     {
-        Task<bool> AllowTransaction(Transaction transaction, Guid userId);
-        Task<bool> AllowBudget(Budget budget, Guid userId);
+        Task AllowTransaction(Transaction transaction, Guid userId);
+        Task AllowBudget(Budget budget, Guid userId);
+        Task AllowCategory(Category category, Guid userId);
+        Task AllowCategoryDelete(Category category, Guid userId);
     }
 }

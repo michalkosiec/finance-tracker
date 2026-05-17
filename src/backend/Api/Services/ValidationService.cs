@@ -6,7 +6,7 @@ namespace Api.Services
 {
     public class ValidationService(IBudgetRepo budgetRepo, ITransactionRepo transactionRepo, ICategoryRepo categoryRepo) : IValidationService
     {
-        public async Task<bool> AllowBudget(Budget budget, Guid userId)
+        public async Task AllowBudget(Budget budget, Guid userId)
         {
             var budgetId = budget.Id;
             var categoryId = budget.CategoryId;
@@ -28,13 +28,37 @@ namespace Api.Services
            
             if(totalAmount > limitAmount)
             {
-                return false;
+                throw new BadHttpRequestException($"Cannot set the budget limit ({limitAmount}) below the already spent amount ({totalAmount}).");
             }
-
-            return true;
         }
 
-        public async Task<bool> AllowTransaction(Transaction transaction, Guid userId)
+        public async Task AllowCategory(Category category, Guid userId)
+        {
+            var nameExists = await categoryRepo.AnyAsync(c => c.Name == category.Name, userId);
+
+            if(nameExists)
+            {
+                throw new BadHttpRequestException("Category with the given name already exists.");
+            }
+        }
+
+        public async Task AllowCategoryDelete(Category category, Guid userId)
+        {
+            if (category.UserId != userId)
+            {
+                throw new UnauthorizedAccessException("You do not have permission to delete this category.");
+            }
+
+            var isUsedInBudgets = await budgetRepo.AnyAsync(b => b.CategoryId == category.Id, userId);
+
+            if (isUsedInBudgets)
+            {
+                throw new BadHttpRequestException("Cannot delete this category because it is currently linked to one or more budgets.");
+            }
+
+        }
+
+        public async Task AllowTransaction(Transaction transaction, Guid userId)
         {
            var categoryId = transaction.CategoryId;
            var amount = transaction.Amount;
@@ -46,15 +70,16 @@ namespace Api.Services
 
            var budget = await budgetRepo.GetByCategoryAsync(categoryId);
 
-           if (budget is null) return true;
+           if (budget is null) return;
 
            var month = budget.Month;
 
            decimal totalAmount = amount + await transactionRepo.GetTotalSpendingAsync(userId, categoryId, month, transaction.Id);
            
-           if (transaction.Type == TransactionType.Expense && totalAmount > budget.LimitAmount) return false;
-
-           return true;
+           if (transaction.Type == TransactionType.Expense && totalAmount > budget.LimitAmount)
+            {
+                throw new BadHttpRequestException($"Transaction denied. Adding this expense ({amount}) would exceed the category budget limit of {budget.LimitAmount}. Total spending would be {totalAmount}.");
+            }
         }
     }
 }

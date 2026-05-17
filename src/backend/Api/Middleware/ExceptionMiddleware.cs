@@ -23,6 +23,7 @@ namespace Api.Middleware
             context.Response.StatusCode = ex switch
             {
                 KeyNotFoundException => (int)HttpStatusCode.NotFound,
+                BadHttpRequestException => (int)HttpStatusCode.BadRequest,
                 UnauthorizedAccessException => (int)HttpStatusCode.Unauthorized,
                 _ => (int)HttpStatusCode.InternalServerError
             };

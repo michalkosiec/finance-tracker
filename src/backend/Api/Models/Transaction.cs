@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Api.Models
 {
@@ -19,13 +20,16 @@ namespace Api.Models
         public User? User {get; set;}
 
         [Required]
+        [StringLength(100, MinimumLength = 3, ErrorMessage = "Transaction name must be between {2} and {1} characters.")]
         public string Name {get; set;}
 
         [Required]
+        [Column(TypeName = "decimal(12,2)")]
+        [Range(0.01, (double)decimal.MaxValue, ErrorMessage = "Transaction amount must be greater than 0.")]
         public decimal Amount {get; set;}
 
         [Required]
-        [StringLength(3)]
+        [StringLength(3, MinimumLength = 3, ErrorMessage = "Currency must be exactly {1} characters.")]
         public string Currency {get; set;}
 
         [Required]
@@ -36,6 +40,7 @@ namespace Api.Models
         public DateTime Date {get; set;}
 
         [Required]
+        [EnumDataType(typeof(TransactionType), ErrorMessage = "Invalid transaction type.")]
         public TransactionType Type {get; set;}
 
         [Required]
